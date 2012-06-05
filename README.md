@@ -1,4 +1,4 @@
-jsp-api
-=======
+Test
+===========
 
-API-fy the bus schedule on jsp.com.mk
+To run the test, execute nodeunit jspfetch_test.js
