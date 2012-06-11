@@ -28,3 +28,7 @@ To run the test, execute
 `nodeunit test`
 
 Currently it runs the phantomjs script and fetches the current and next day bus schedule for 35 main busses.
+
+Theme1
+===========
+Proposed jquery mobile theme: http://jquerymobile.com/themeroller/?ver=1.1.0&style_id=20120611-60
