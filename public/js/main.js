@@ -27,9 +27,9 @@ var dbtransform = function(db) {
 $("#main").bind('pageshow', function() {
     var now = new Date().getTime();
     var mylist = JSON.parse($.cookie('busses'));
-    if (mylist) {
-        $("#main .list li").remove();
-        var busses = []; for (var key in mylist) if (mylist[key]) busses.push(key);
+    $("#main .list li").remove();
+    var busses = []; for (var key in mylist) if (mylist[key]) busses.push(key);
+    if (busses.length) {
         $.getJSON('/api', {list: busses.join(',')}, function(res) {
             var bl = dbtransform(res);
             for (var bus in bl) {
@@ -70,6 +70,9 @@ $("#main").bind('pageshow', function() {
             }
             $('#main .list').listview('refresh');
         });
+    } else {
+        $('<li />').text("Кликни на + за да наместиш автобуси").appendTo('#main .list');
+        $('#main .list').listview('refresh');
     }
 });
 $("#busses").bind('pageinit', function() {
