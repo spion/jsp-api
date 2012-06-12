@@ -7,4 +7,10 @@ module.exports = function(app) {
             res.json(resp);
         });
     });
+    app.get("/api/busses", function(req, res) {
+        db.list(function(err, resp) {
+            if (err) return res.json(err, 500);
+            res.json(resp);
+        });
+    });
 };

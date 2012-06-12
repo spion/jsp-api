@@ -1,0 +1,40 @@
+.bus {
+    font-size:4.4em;
+    float:left;
+    margin-right:0.25em;
+    min-width:1.5em;
+    text-align:right;
+}
+
+.loc .time {
+    margin-right:1em;
+}
+
+.loc .name {
+    color:#C1272D;
+    margin-bottom:0.2em;
+}
+.loc .name.second {
+    margin-top:0.6em;
+}
+
+.clearfix:after {
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+}
+
+.clearfix {
+    display: inline-block;
+}
+
+html[xmlns] .clearfix {
+    display: block;
+}
+
+* html .clearfix {
+    height: 1%;
+}
