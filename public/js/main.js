@@ -17,10 +17,10 @@ var dbtransform = function(db) {
                 if (!o[bus][direction.name]) o[bus][direction.name] = [];
                 var arr = o[bus][direction.name];
                 direction.times.forEach(function(time) {
-                    var hm = time.split(':')
+                    var hm = time.when.split(':')
                         .map(function(item) { return parseInt(item, 10) });
                     var actualTime = new Date(ymd[0], ymd[1] - 1, ymd[2], hm[0], hm[1]);
-                    o[bus][direction.name].push(actualTime);
+                    o[bus][direction.name].push({when: actualTime, info:time.info});
                 });
             });
         }
@@ -38,13 +38,16 @@ $("#main").bind('pageshow', function() {
             $("#main .list li").remove();
             var bl = dbtransform(res);
             for (var bus in bl) {
-                var item = $("<li />").appendTo($("#main .list"));
-                $("<div />").addClass('bus').addClass('clearfix')
+                var item = $("<li />").addClass('clearfix').appendTo($("#main .list"));
+                $("<div />").addClass('bus')//.addClass('clearfix')
                     .text(bus).appendTo(item), locCnt = 0;
 
+                var itemInfo = $("<div />").addClass('info')
+                    //.addClass('clearfix')
+                    .appendTo(item);
                 for (var loc in bl[bus]) {
                     
-                    var locDiv = $("<div>").addClass('loc').appendTo(item);
+                    var locDiv = $("<div />").addClass('loc').appendTo(itemInfo);
                     var locNameDiv = $("<div />").addClass('name')
                         .text(loc).appendTo(locDiv);
                     if (locCnt++) locNameDiv.addClass('second');
@@ -54,18 +57,19 @@ $("#main").bind('pageshow', function() {
                     if (!times.length) 
                         $("<span />").addClass('time').text('Нема')
                             .appendTo(timesDiv);
-                    for (var k = 1; k < times.length; ++k) {
-                        if (times[k].getTime() > now) {
-                            if (times[k - 1].getTime() < now) {
-                                $("<span />").addClass('time')
-                                    .text(times[k - 1].toLocaleTimeString().substr(0,5))
+                    var appendToDiv = function(t) {
+                         $("<span />").addClass('time')
+                                    .text(t.when.toLocaleTimeString().substr(0,5) + ' ' + t.info)
                                     .appendTo(timesDiv);
-                                ++cntTimes;
+                          ++cntTimes;
+                    }
+                    for (var k = 1; k < times.length; ++k) {
+                        if (times[k].when.getTime() > now) {
+                            if (times[k - 1].when.getTime() < now) {
+                                appendToDiv(times[k-1]);
                             }
-                            $("<span />").addClass('time')
-                                .text(times[k].toLocaleTimeString().substr(0,5))
-                                .appendTo(timesDiv);
-                            if (++cntTimes > 2) break;
+                            appendToDiv(times[k]);
+                            if (cntTimes > 2) break;
                         }
                     }
                     ++locCnt;

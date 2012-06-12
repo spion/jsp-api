@@ -1,20 +1,22 @@
-.bus {
-    font-size:4.4em;
+li .bus {
+    font-size:3.5em;
     float:left;
     margin-right:0.25em;
-    min-width:1.5em;
+    min-width:1.75em;
     text-align:right;
 }
-
-.loc .time {
+li .info {
+    float:left;
+}
+li .loc .time {
     margin-right:1em;
 }
 
-.loc .name {
+li .loc .name {
     color:#C1272D;
     margin-bottom:0.2em;
 }
-.loc .name.second {
+li .loc .name.second {
     margin-top:0.6em;
 }
 
