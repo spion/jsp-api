@@ -58,7 +58,7 @@ $("#main").bind('pageshow', function() {
                         if (times[k].getTime() > now) {
                             if (times[k - 1].getTime() < now) {
                                 $("<span />").addClass('time')
-                                    .text(times[k].toLocaleTimeString().substr(0,5))
+                                    .text(times[k - 1].toLocaleTimeString().substr(0,5))
                                     .appendTo(timesDiv);
                                 ++cntTimes;
                             }
