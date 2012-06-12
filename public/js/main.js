@@ -31,10 +31,10 @@ $("#main").bind('pageshow', function() {
     $.mobile.defaultDialogTransition = 'none'
     var now = new Date().getTime();
     var mylist = JSON.parse($.cookie('busses'));
-    $("#main .list li").remove();
     var busses = []; for (var key in mylist) if (mylist[key]) busses.push(key);
     if (busses.length) {
         $.getJSON('/api', {list: busses.join(',')}, function(res) {
+            $("#main .list li").remove();
             var bl = dbtransform(res);
             for (var bus in bl) {
                 var item = $("<li />").appendTo($("#main .list"));
