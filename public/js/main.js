@@ -1,4 +1,7 @@
-
+$.mobile.defaultPageTransition = 'none';
+$.mobile.defaultDialogTransition = 'none'
+$.mobile.useFastClick = true;
+$.mobile.buttonMarkup.hoverDelay = 15;
 
 var dbtransform = function(db) {
     var o = {};
@@ -27,9 +30,7 @@ var dbtransform = function(db) {
 
 
 $("#main").bind('pageshow', function() {
-    $.mobile.defaultPageTransition = 'none';
-    $.mobile.defaultDialogTransition = 'none'
-    var now = new Date().getTime();
+   var now = new Date().getTime();
     var mylist = JSON.parse($.cookie('busses'));
     var busses = []; for (var key in mylist) if (mylist[key]) busses.push(key);
     if (busses.length) {
@@ -57,9 +58,7 @@ $("#main").bind('pageshow', function() {
                         if (times[k].getTime() > now) {
                             if (times[k - 1].getTime() < now) {
                                 $("<span />").addClass('time')
-                                    .text(times[k - 1].getHours() 
-                                        + ':' 
-                                        + times[k - 1].getMinutes())
+                                    .text(times[k].toLocaleTimeString().substr(0,5))
                                     .appendTo(timesDiv);
                                 ++cntTimes;
                             }
