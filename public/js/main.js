@@ -1,3 +1,5 @@
+
+
 var dbtransform = function(db) {
     var o = {};
     for (var day in db) {
@@ -25,6 +27,8 @@ var dbtransform = function(db) {
 
 
 $("#main").bind('pageshow', function() {
+    $.mobile.defaultPageTransition = 'none';
+    $.mobile.defaultDialogTransition = 'none'
     var now = new Date().getTime();
     var mylist = JSON.parse($.cookie('busses'));
     $("#main .list li").remove();
