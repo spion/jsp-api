@@ -22,6 +22,9 @@ var dbtransform = function(db) {
                     var actualTime = new Date(ymd[0], ymd[1] - 1, ymd[2], hm[0], hm[1]);
                     o[bus][direction.name].push({when: actualTime, info:time.info});
                 });
+                o[bus][direction.name].sort(function(a, b) { 
+                    return a.when.getTime() - b.when.getTime() 
+                });
             });
         }
     }
