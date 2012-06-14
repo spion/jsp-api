@@ -78,6 +78,7 @@ $("#main").bind('pageshow', function() {
             $('#main .list').listview('refresh');
         });
     } else {
+        $('#main .list .li').remove();
         $('<li />').text("Кликни на + за да наместиш автобуси").appendTo('#main .list');
         $('#main .list').listview('refresh');
     }
