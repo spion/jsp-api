@@ -52,13 +52,14 @@ $("#main").bind('pageshow', function() {
                     .appendTo(item);
                 for (var loc in bl[bus]) {
                     //if (!bl[bus][loc].times || !bl[bus][loc].times.length) continue;
+                    var times = bl[bus][loc], cntTimes = 0;
+                    if (!times.length) continue;
                     var locDiv = $("<div />").addClass('loc').appendTo(itemInfo);
                     var locNameDiv = $("<div />").addClass('name')
                         .text(loc).appendTo(locDiv);
                     if (locCnt++) locNameDiv.addClass('second');
                     var timesDiv = $("<div />").addClass('times').appendTo(locDiv);
 
-                    var times = bl[bus][loc], cntTimes = 0;
                     var appendToDiv = function(t) {
                          $("<span />").addClass('time')
                                     .text(t.when.toLocaleTimeString().substr(0,5) + ' ' + t.info)
