@@ -25,7 +25,7 @@ var dbtransform = function(db) {
                         o[bus][direction.name].push({when: actualTime, info:time.info});
                 });
                 o[bus][direction.name].sort(function(a, b) { 
-                    return a.when.getTime() - b.when.getTime() 
+                    return a.when.getTime() - b.when.getTime();
                 });
             });
         }
@@ -67,12 +67,18 @@ $("#main").bind('pageshow', function() {
                                     .appendTo(timesDiv);
                           ++cntTimes;
                     }
+                    var lastWhen = 0;
                     for (var k = 1; k < times.length; ++k) {
                         if (times[k].when.getTime() > now) {
                             if (times[k - 1].when.getTime() < now) {
                                 appendToDiv(times[k-1]);
                             }
-                            appendToDiv(times[k]);
+                            // TODO: figure out why this actually happens
+                            // instead of the workarround for dupes
+                            if (Math.abs(times[k].when - lastWhen) > 0) {
+                                appendToDiv(times[k]);
+                                lastWhen = times[k].when;
+                            }
                             if (cntTimes > 2) break;
                         }
                     }
