@@ -30,6 +30,7 @@ var dbtransform = function(db) {
             });
         }
     }
+    if (console && console.log) console.log(o);
     return o;
 };
 
