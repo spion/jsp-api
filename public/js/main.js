@@ -22,7 +22,7 @@ var dbtransform = function(db) {
                         .map(function(item) { return parseInt(item, 10) });
                     var actualTime = new Date(ymd[0], ymd[1] - 1, ymd[2], hm[0], hm[1]);
                     if (Math.abs(now - actualTime.getTime()) < 1000*60*60*6)
-                    o[bus][direction.name].push({when: actualTime, info:time.info});
+                        o[bus][direction.name].push({when: actualTime, info:time.info});
                 });
                 o[bus][direction.name].sort(function(a, b) { 
                     return a.when.getTime() - b.when.getTime() 
@@ -51,7 +51,7 @@ $("#main").bind('pageshow', function() {
                     //.addClass('clearfix')
                     .appendTo(item);
                 for (var loc in bl[bus]) {
-                    if (!bl[bus][loc].times || !bl[bus][loc].times.length) continue;
+                    //if (!bl[bus][loc].times || !bl[bus][loc].times.length) continue;
                     var locDiv = $("<div />").addClass('loc').appendTo(itemInfo);
                     var locNameDiv = $("<div />").addClass('name')
                         .text(loc).appendTo(locDiv);
