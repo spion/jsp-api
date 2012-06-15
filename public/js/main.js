@@ -4,6 +4,7 @@ $.mobile.useFastClick = true;
 $.mobile.buttonMarkup.hoverDelay = 15;
 
 var dbtransform = function(db) {
+    var now = new Date().getTime();
     var o = {};
     for (var day in db) {
         for (var bus in db[day]) {
@@ -20,6 +21,7 @@ var dbtransform = function(db) {
                     var hm = time.when.split(':')
                         .map(function(item) { return parseInt(item, 10) });
                     var actualTime = new Date(ymd[0], ymd[1] - 1, ymd[2], hm[0], hm[1]);
+                    if (Math.abs(now - actualTime.getTime()) < 1000*60*60*6)
                     o[bus][direction.name].push({when: actualTime, info:time.info});
                 });
                 o[bus][direction.name].sort(function(a, b) { 
@@ -49,7 +51,7 @@ $("#main").bind('pageshow', function() {
                     //.addClass('clearfix')
                     .appendTo(item);
                 for (var loc in bl[bus]) {
-                    
+                    if (!bl[bus][loc].times.length) continue;
                     var locDiv = $("<div />").addClass('loc').appendTo(itemInfo);
                     var locNameDiv = $("<div />").addClass('name')
                         .text(loc).appendTo(locDiv);
@@ -57,9 +59,6 @@ $("#main").bind('pageshow', function() {
                     var timesDiv = $("<div />").addClass('times').appendTo(locDiv);
 
                     var times = bl[bus][loc], cntTimes = 0;
-                    if (!times.length) 
-                        $("<span />").addClass('time').text('Нема')
-                            .appendTo(timesDiv);
                     var appendToDiv = function(t) {
                          $("<span />").addClass('time')
                                     .text(t.when.toLocaleTimeString().substr(0,5) + ' ' + t.info)
