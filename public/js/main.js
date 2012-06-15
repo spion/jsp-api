@@ -51,7 +51,7 @@ $("#main").bind('pageshow', function() {
                     //.addClass('clearfix')
                     .appendTo(item);
                 for (var loc in bl[bus]) {
-                    if (!bl[bus][loc].times.length) continue;
+                    if (!bl[bus][loc].times || !bl[bus][loc].times.length) continue;
                     var locDiv = $("<div />").addClass('loc').appendTo(itemInfo);
                     var locNameDiv = $("<div />").addClass('name')
                         .text(loc).appendTo(locDiv);
