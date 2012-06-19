@@ -96,11 +96,13 @@ var dbtransform = function(db) {
             if (!o[bus]) o[bus] = {};
             for (var dir in busday) { direction = busday[dir]; 
                 
-                // handle dumb JSP direction names written by dumb people. 
+                // Handle dumb JSP direction names written by dumb people. 
                 // Like "Karposh-3" and "Karposh 3" which are the same, 
                 // but for some inexplicable reason have different names.
+                
+                dir = dir.split('(')[0];
                 for (var odir in o[bus]) 
-                    if (levenshteinPercent(odir, dir) < 0.66) { dir = odir; break; }
+                    if (levenshteinPercent(odir, dir.split < 0.5) { dir = odir; break; }
                 
 
 
