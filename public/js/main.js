@@ -254,7 +254,7 @@ $("#goto-busses").live('vclick', function() {
     $.mobile.changePage('#busses');
 });
 
-$("#busses").bind('pageinit', function() {
+$("#busses").bind('pageshow', function() {
 
     $.getJSON('/api/busses', function(arr) {
         $("#bus-select").html("")
