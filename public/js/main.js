@@ -21,7 +21,7 @@ var dbtransform = function(db) {
                     var hm = time.when.split(':')
                         .map(function(item) { return parseInt(item, 10) });
                     var actualTime = new Date(ymd[0], ymd[1] - 1, ymd[2], hm[0], hm[1]);
-                    if (Math.abs(now - actualTime.getTime()) < 1000*60*60*10)
+                    if (Math.abs(now - actualTime.getTime()) < 1000*60*60*9)
                         o[bus][direction.name].push({when: actualTime, info:time.info});
                 });
                 o[bus][direction.name].sort(function(a, b) { 
@@ -153,7 +153,12 @@ $("#bus").bind('pageshow', function() {
     else updateBus();
 });
 
+$("#goto-busses").live('vclick', function() {
+    $.mobile.changePage('#busses');
+});
+
 $("#busses").bind('pageinit', function() {
+
     $.getJSON('/api/busses', function(arr) {
         $("#bus-select").html("")
         var mylist = JSON.parse($.cookie('busses'));
