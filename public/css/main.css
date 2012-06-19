@@ -45,13 +45,13 @@ html[xmlns] .clearfix {
 #bus .content .dir {
     float:left;
     margin-right:1em;
+    max-width:40%;
 }
 
 #bus .content .dir .name {
     color:#C1272D;
     margin-bottom:0.5em;
     font-weight:bold;
-    max-width:40%;
     height:3.5em;
 }
 #bus .content .dir .time {
