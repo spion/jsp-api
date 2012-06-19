@@ -101,8 +101,9 @@ var dbtransform = function(db) {
                 // but for some inexplicable reason have different names.
                 
                 dir = dir.split('(')[0];
+
                 for (var odir in o[bus]) 
-                    if (levenshteinPercent(odir, dir.split < 0.5) { dir = odir; break; }
+                    if (levenshteinPercent(odir, dir) < 0.5) { dir = odir; break; }
                 
 
 
