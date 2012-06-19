@@ -40,3 +40,19 @@ html[xmlns] .clearfix {
 * html .clearfix {
     height: 1%;
 }
+
+
+#bus .content .dir {
+    float:left;
+    margin-right:1em;
+}
+
+#bus .content .dir .name {
+    color:#C1272D;
+    margin-bottom:0.5em;
+    font-weight:bold;
+}
+#bus .content .dir .time {
+    margin-bottom:0.2em;
+    font-size:1.2em;
+}

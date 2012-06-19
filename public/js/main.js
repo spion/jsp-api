@@ -27,24 +27,45 @@ var dbtransform = function(db) {
                 o[bus][direction.name].sort(function(a, b) { 
                     return a.when.getTime() - b.when.getTime();
                 });
+                o[bus][direction.name] = o[bus][direction.name]
+                    .filter(function(item, i) { 
+                        return i < 1 || 
+                            o[bus][direction.name][i - 1].when.getTime()
+                                - item.when.getTime() != 0;
+                    });
+                var lastTime = null;
+
             });
         }
     }
-    if (console && console.log) console.log(o);
     return o;
 };
 
 
-$("#main").bind('pageshow', function() {
+var bl;
+
+
+var downloadBusses = function() {
    var now = new Date().getTime();
     var mylist = JSON.parse($.cookie('busses'));
     var busses = []; for (var key in mylist) if (mylist[key]) busses.push(key);
     if (busses.length) {
         $.getJSON('/api', {list: busses.join(',')}, function(res) {
             $("#main .list li").remove();
-            var bl = dbtransform(res);
+            bl = dbtransform(res);
+            $("#bus").trigger('downloaded');
             for (var bus in bl) {
                 var item = $("<li />").addClass('clearfix').appendTo($("#main .list"));
+                // on item click, open bus details
+                //
+                item.bind('vclick', function() {
+                    var busn = $(this).find('.bus').text()
+                    location.hash = '#bus?' + busn;
+                    $("#bus").attr('data-url', location.hash)
+                    $.mobile.changePage(location.hash, {changeHash: false});
+
+                });
+
                 $("<div />").addClass('bus')//.addClass('clearfix')
                     .text(bus).appendTo(item), locCnt = 0;
 
@@ -63,7 +84,8 @@ $("#main").bind('pageshow', function() {
 
                     var appendToDiv = function(t) {
                          $("<span />").addClass('time')
-                                    .text(t.when.toLocaleTimeString().substr(0,5) + ' ' + t.info)
+                                    .text(t.when.toLocaleTimeString()
+                                            .substr(0,5) + ' ' + t.info)
                                     .appendTo(timesDiv);
                           ++cntTimes;
                     }
@@ -85,14 +107,52 @@ $("#main").bind('pageshow', function() {
                     ++locCnt;
                 }
             }
-            $('#main .list').listview('refresh');
+            try {
+                $('#main .list').listview('refresh');
+            }catch (e) {}
         });
     } else {
         $("#main .list li").remove();
         $('<li />').text("Кликни на + за да наместиш автобуси").appendTo('#main .list');
         $('#main .list').listview('refresh');
     }
+}
+
+$("#main").bind('pageshow', downloadBusses);
+
+$("#bus").bind('pageshow', function() {
+    var bn = location.hash.split('?')[1];
+    var updateBus = function() {
+        $("#bus").unbind('downloaded');
+        var detail = {name: bn, data: bl[bn]}; 
+        $("#bus h1 .busname").text(detail.name);
+        var now = new Date().getTime();
+        $("#bus .content").html("");
+        for (var dir in detail.data) {
+            var times = detail.data[dir];
+            var dirDiv = $("<div>").addClass('dir').appendTo('#bus .content');
+            $("<div>").addClass('name').appendTo(dirDiv).text(dir);
+            var timesDiv = $("<div>").addClass('times').appendTo(dirDiv);
+            for (var k = 0; k < times.length; ++k) {
+                if (times[k].when > now) {
+                    $("<div>").addClass('time').appendTo(timesDiv).text(
+                        times[k].when.toLocaleTimeString()
+                        .substr(0,5) + ' ' + times[k].info)
+                }
+            }
+        }
+    }
+    if (!bl) {
+        var mylist = JSON.parse($.cookie('busses'));
+        mylist = mylist?mylist:{};
+        mylist[bn] = true;;
+        $.cookie('busses', JSON.stringify(mylist), {expires: 999});
+        $("#bus").bind('downloaded', updateBus);
+        downloadBusses(); 
+    }
+    else updateBus();
 });
+
 $("#busses").bind('pageinit', function() {
     $.getJSON('/api/busses', function(arr) {
         $("#bus-select").html("")
