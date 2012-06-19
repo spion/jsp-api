@@ -100,7 +100,7 @@ var dbtransform = function(db) {
                 // Like "Karposh-3" and "Karposh 3" which are the same, 
                 // but for some inexplicable reason have different names.
                 
-                dir = dir.split('(')[0];
+                dir = dir.replace('нас.','');
 
                 for (var odir in o[bus]) 
                     if (levenshteinPercent(odir, dir) < 0.5) { dir = odir; break; }
