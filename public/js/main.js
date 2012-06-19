@@ -103,9 +103,12 @@ var dbtransform = function(db) {
                 dir = dir.replace('нас.','');
 
 
-                for (var odir in o[bus]) 
+                for (var odir in o[bus]) { 
+                    var dirImportant = dir.split('(')[0],
+                        odirImportant = odir.split('(')[0]
                     if (odir.indexOf(dir) >= 0 || dir.indexOf(odir) >= 0 ||
-                            levenshteinPercent(odir, dir) < 0.5) { dir = odir; break; }
+                            levenshteinPercent(odirImportant, dirImportant) < 0.5) { dir = odir; break; }
+                }
 
                 
 
