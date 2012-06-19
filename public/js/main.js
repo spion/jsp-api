@@ -102,10 +102,12 @@ var dbtransform = function(db) {
                 
                 dir = dir.replace('нас.','');
 
-                for (var odir in o[bus]) 
-                    if (levenshteinPercent(odir, dir) < 0.5) { dir = odir; break; }
-                
 
+                for (var odir in o[bus]) 
+                    if (odir.indexOf(dir) >= 0 || dir.indexOf(odir) >= 0 ||
+                            levenshteinPercent(odir, dir) < 0.5) { dir = odir; break; }
+
+                
 
                 if (!o[bus][dir]) o[bus][dir] = [];
                 var arr = o[bus][dir];
