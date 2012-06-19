@@ -3,6 +3,86 @@ $.mobile.defaultDialogTransition = 'none'
 $.mobile.useFastClick = true;
 $.mobile.buttonMarkup.hoverDelay = 15;
 
+
+function levenshtein (s1, s2) {
+    // Calculate Levenshtein distance between two strings  
+    // 
+    // version: 1109.2015
+    // discuss at: http://phpjs.org/functions/levenshtein
+    // +            original by: Carlos R. L. Rodrigues (http://www.jsfromhell.com)
+    // +            bugfixed by: Onno Marsman
+    // +             revised by: Andrea Giammarchi (http://webreflection.blogspot.com)
+    // + reimplemented by: Brett Zamir (http://brett-zamir.me)
+    // + reimplemented by: Alexander M Beedie
+    // *                example 1: levenshtein('Kevin van Zonneveld', 'Kevin van Sommeveld');
+    // *                returns 1: 3
+    if (s1 == s2) {
+        return 0;
+    }
+ 
+    var s1_len = s1.length;
+    var s2_len = s2.length;
+    if (s1_len === 0) {
+        return s2_len;
+    }
+    if (s2_len === 0) {
+        return s1_len;
+    }
+ 
+    // BEGIN STATIC
+    var split = false;
+    try {
+        split = !('0')[0];
+    } catch (e) {
+        split = true; // Earlier IE may not support access by string index
+    }
+    // END STATIC
+    if (split) {
+        s1 = s1.split('');
+        s2 = s2.split('');
+    }
+ 
+    var v0 = new Array(s1_len + 1);
+    var v1 = new Array(s1_len + 1);
+ 
+    var s1_idx = 0,
+        s2_idx = 0,
+        cost = 0;
+    for (s1_idx = 0; s1_idx < s1_len + 1; s1_idx++) {
+        v0[s1_idx] = s1_idx;
+    }
+    var char_s1 = '',
+        char_s2 = '';
+    for (s2_idx = 1; s2_idx <= s2_len; s2_idx++) {
+        v1[0] = s2_idx;
+        char_s2 = s2[s2_idx - 1];
+ 
+        for (s1_idx = 0; s1_idx < s1_len; s1_idx++) {
+            char_s1 = s1[s1_idx];
+            cost = (char_s1 == char_s2) ? 0 : 1;
+            var m_min = v0[s1_idx + 1] + 1;
+            var b = v1[s1_idx] + 1;
+            var c = v0[s1_idx] + cost;
+            if (b < m_min) {
+                m_min = b;
+            }
+            if (c < m_min) {
+                m_min = c;
+            }
+            v1[s1_idx + 1] = m_min;
+        }
+        var v_tmp = v0;
+        v0 = v1;
+        v1 = v_tmp;
+    }    
+    return v0[s1_len];
+}
+
+function levenshteinPercent(s1, s2) {
+    return levenshtein(s1,s2) / Math.max(s1.length, s2.length);
+}
+
+
 var dbtransform = function(db) {
     var now = new Date().getTime();
     var o = {};
@@ -14,28 +94,37 @@ var dbtransform = function(db) {
 
             var ymd = day.split('-').map(function(item) { return parseInt(item, 10); });
             if (!o[bus]) o[bus] = {};
-            busday.forEach(function(direction) {
-                if (!o[bus][direction.name]) o[bus][direction.name] = [];
-                var arr = o[bus][direction.name];
-                direction.times.forEach(function(time) {
+            for (var dir in busday) { direction = busday[dir]; 
+                
+                // handle dumb JSP direction names written by dumb people. 
+                // Like "Karposh-3" and "Karposh 3" which are the same, 
+                // but for some inexplicable reason have different names.
+                for (var odir in o[bus]) 
+                    if (levenshteinPercent(odir, dir) < 0.66) { dir = odir; break; }
+                
+
+
+                if (!o[bus][dir]) o[bus][dir] = [];
+                var arr = o[bus][dir];
+                direction.forEach(function(time) {
                     var hm = time.when.split(':')
                         .map(function(item) { return parseInt(item, 10) });
                     var actualTime = new Date(ymd[0], ymd[1] - 1, ymd[2], hm[0], hm[1]);
-                    if (Math.abs(now - actualTime.getTime()) < 1000*60*60*9)
-                        o[bus][direction.name].push({when: actualTime, info:time.info});
+                    if (Math.abs(now - actualTime.getTime()) < 1000*60*60*12)
+                        o[bus][dir].push({when: actualTime, info:time.info});
                 });
-                o[bus][direction.name].sort(function(a, b) { 
+                o[bus][dir].sort(function(a, b) { 
                     return a.when.getTime() - b.when.getTime();
                 });
-                o[bus][direction.name] = o[bus][direction.name]
+                o[bus][dir] = o[bus][dir]
                     .filter(function(item, i) { 
                         return i < 1 || 
-                            o[bus][direction.name][i - 1].when.getTime()
+                            o[bus][dir][i - 1].when.getTime()
                                 - item.when.getTime() != 0;
                     });
                 var lastTime = null;
 
-            });
+            };
         }
     }
     return o;
