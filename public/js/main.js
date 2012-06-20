@@ -250,11 +250,11 @@ $("#bus").bind('pageshow', function() {
     else updateBus();
 });
 
-$("#goto-busses").live('touchend', function(e) {
-    $.mobile.changePage('#busses');
-    e.preventDefault();
-    return false;
-});
+//$("#goto-busses").live('touchend', function(e) {
+//    $.mobile.changePage('#busses');
+//    e.preventDefault();
+//    return false;
+//});
 
 $("#busses").bind('pageshow', function() {
 
