@@ -26,7 +26,6 @@ app.configure('production', function(){
 });
 
 // Routes
-
 fs.readdirSync(__dirname + '/routes').forEach(function(f) {
     console.log("Loading", f);
     if (/.+\.js/.test(f)) {
@@ -34,6 +33,7 @@ fs.readdirSync(__dirname + '/routes').forEach(function(f) {
     }
 });
 
-app.listen(8081, function(){
-  console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+app.listen(process.env.PORT || 8150, function(){
+  console.log("Express server listening on port %d in %s mode", 
+              process.env.PORT, app.settings.env);
 });

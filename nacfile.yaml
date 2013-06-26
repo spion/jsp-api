@@ -1,6 +1,6 @@
 command: node
 args:
-  _: [app.js]
+  _: [jsp.js]
 env:
   NODE_ENV: production
   PORT: 8150
