@@ -9,7 +9,8 @@ module.exports = function(app) {
     });
     app.get("/api/busses", function(req, res) {
         db.list(function(err, resp) {
-            if (err) return res.json(err, 500);
+            console.log(err, resp);
+            if (err) return res.json({error: err}, 500);
             res.json(resp);
         });
     });
