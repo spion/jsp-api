@@ -1,3 +1,4 @@
 git fetch upstream
-git checkout $1
+git stash
+git checkout upstream/$1
 nac jsp restart
